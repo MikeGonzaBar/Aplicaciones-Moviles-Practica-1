@@ -1,6 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'package:practica1/favorites.dart';
+import 'package:practica1/pages/favorites.dart';
 import 'package:record/record.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,21 +11,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _animate = true;
+  bool _animate = false;
+  String msg = "Toque para escuchar";
   Record record = Record();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850],
       body: Padding(
         padding: const EdgeInsets.fromLTRB(8, 120, 8, 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              "Toque para escuchar",
-              style: TextStyle(
+            Text(
+              msg,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -44,6 +44,10 @@ class _HomePageState extends State<HomePage> {
                 shape: const CircleBorder(),
                 onPressed: () {
                   _animate = !_animate;
+
+                  msg = (msg == "Escuchando...")
+                      ? "Toque para escuchar"
+                      : "Escuchando...";
                   setState(() {});
                 },
                 child: const CircleAvatar(
