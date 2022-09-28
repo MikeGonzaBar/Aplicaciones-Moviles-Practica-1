@@ -24,6 +24,7 @@ class SelectedSong extends StatelessWidget {
               } else {
                 print('ADD $songData to favorites');
                 context.read<FavoriteProvider>().addNewSong(songData);
+                Navigator.of(context).pop();
               }
             },
           ),
@@ -86,7 +87,7 @@ class SelectedSong extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    _launchURL("${songData["song_link"]}");
+                    _launchURL("${songData["deezer"]["link"]}");
                   },
                   icon: const FaIcon(FontAwesomeIcons.deezer),
                 ),

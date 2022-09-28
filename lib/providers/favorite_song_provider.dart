@@ -143,20 +143,25 @@ class FavoriteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> searchSong(String songPath) async {
-    print("In favorite song provider: $songPath");
+  Future<dynamic> searchSong(String songPath) async {
     File songFile = File(songPath);
     String songString = _fileConvert(songFile);
-    dynamic songObject = await _sendToAPI(songString);
-    addNewSong(songObject);
-    notifyListeners();
+    dynamic response = await _sendToAPI(songString);
+    dynamic songObject = response["result"];
+    if (songObject != null) {
+      if (songObject["spotify"]["album"]["images"][0]["url"] == null) {
+        songObject["spotify"]["album"]["images"][0]["url"] =
+            'https://bazarama.com/assets/imgs/Image-not-available.png';
+        addNewSong(songObject);
+        notifyListeners();
+      }
+    }
+    return songObject;
   }
 
   String _fileConvert(File file) {
     Uint8List fileBytes = file.readAsBytesSync();
-
     String base64String = base64Encode(fileBytes);
-
     return base64String;
   }
 
@@ -164,7 +169,8 @@ class FavoriteProvider with ChangeNotifier {
     print("Sending file: $file");
     var url = Uri.parse('https://api.audd.io/');
     var response = await http.post(url, body: {
-      'api_token': dotenv.env['API_KEY'],
+      'api_token': 'f9576b7cedfe753b5fe7e042b1254a99',
+      // 'api_token': dotenv.env['API_KEY'],
       'return': 'apple_music,spotify,deezer',
       'audio': file,
       'method': 'recognize',

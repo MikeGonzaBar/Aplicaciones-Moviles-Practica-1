@@ -5,6 +5,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:practica1/pages/favorites.dart';
+import 'package:practica1/pages/selected_song.dart';
 import 'package:practica1/providers/favorite_song_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
@@ -110,12 +111,42 @@ class _HomePageState extends State<HomePage> {
 // Get the state of the recorder
     bool isRecording = await record.isRecording();
     if (isRecording) {
-      Timer(Duration(seconds: 4), () async {
-        print("Yeah, this line is printed after 4 seconds");
-        String? songPath = await record.stop();
-        print(songPath);
-        context.read<FavoriteProvider>().searchSong(songPath!);
-      });
+      Timer(
+        Duration(seconds: 4),
+        () async {
+          print("Yeah, this line is printed after 4 seconds");
+          String? songPath = await record.stop();
+          print(songPath);
+          dynamic detectedSong =
+              await context.read<FavoriteProvider>().searchSong(songPath!);
+          print("Spotify: ${detectedSong}");
+          if (detectedSong == null) {
+            final snackBar = SnackBar(
+              content: const Text(
+                  'Parece que hubo un error, por favor intentalo de nuevo'),
+              action: SnackBarAction(
+                label: 'ok',
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            );
+
+            // Find the ScaffoldMessenger in the widget tree
+            // and use it to show a SnackBar.
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            return;
+          }
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => SelectedSong(
+                isFavorite: false,
+                songData: detectedSong,
+              ),
+            ),
+          );
+        },
+      );
     }
 // Stop recording
   }
