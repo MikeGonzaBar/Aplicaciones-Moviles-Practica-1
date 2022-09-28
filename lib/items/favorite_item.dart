@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:practica1/pages/selected_song.dart';
 
 class FavoritesItem extends StatelessWidget {
-  final Map<String, String> songData;
+  final dynamic songData;
   const FavoritesItem({super.key, required this.songData});
 
   @override
@@ -19,7 +19,9 @@ class FavoritesItem extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage("${songData["artwork"]}", scale: 1),
+                    image: NetworkImage(
+                        "${songData["spotify"]["album"]["images"][0]["url"]}",
+                        scale: 1),
                   ),
                 ),
               ),

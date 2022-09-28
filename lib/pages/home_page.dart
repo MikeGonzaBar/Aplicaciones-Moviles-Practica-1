@@ -78,11 +78,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
-              backgroundColor: Colors.grey[100],
-              tooltip: "Ver en favoritos",
+              backgroundColor: Colors.pink[500],
+              tooltip: "Ver favoritos",
               child: const Icon(
                 Icons.favorite,
-                color: Colors.black,
+                color: Colors.lightBlue,
                 size: 35,
               ),
             ),

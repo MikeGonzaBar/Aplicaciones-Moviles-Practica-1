@@ -3,10 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:practica1/providers/favorite_song_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class SelectedSong extends StatelessWidget {
-  final Map<String, String> songData;
+  final dynamic songData;
   bool isFavorite;
   SelectedSong({super.key, required this.songData, required this.isFavorite});
 
@@ -35,7 +34,8 @@ class SelectedSong extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.network("${songData["artwork"]}"),
+            Image.network(
+                "${songData["spotify"]["album"]["images"][0]["url"]}"),
             Padding(
               padding: const EdgeInsets.only(top: 32.0),
               child: Text(
@@ -79,7 +79,8 @@ class SelectedSong extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    _launchURL("${songData["spotify"]}");
+                    _launchURL(
+                        "${songData["spotify"]["external_urls"]["spotify"]}");
                   },
                   icon: const FaIcon(FontAwesomeIcons.spotify),
                 ),
@@ -91,7 +92,7 @@ class SelectedSong extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    _launchURL("${songData["apple_music"]}");
+                    _launchURL("${songData["apple_music"]["url"]}");
                   },
                   icon: const FaIcon(FontAwesomeIcons.apple),
                 ),
