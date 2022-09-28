@@ -67,7 +67,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/listening.gif
-    - assets/images/Image-not-available.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
