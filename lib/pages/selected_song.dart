@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:practica1/providers/favorite_song_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SelectedSong extends StatelessWidget {
   final Map<String, String> songData;
-  final bool isFavorite;
-  const SelectedSong(
-      {super.key, required this.songData, required this.isFavorite});
+  bool isFavorite;
+  SelectedSong({super.key, required this.songData, required this.isFavorite});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +24,7 @@ class SelectedSong extends StatelessWidget {
                 addAlert(context);
               } else {
                 print('ADD $songData to favorites');
+                context.read<FavoriteProvider>().addNewSong(songData);
               }
             },
           ),
@@ -74,15 +78,21 @@ class SelectedSong extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _launchURL("${songData["spotify"]}");
+                  },
                   icon: const FaIcon(FontAwesomeIcons.spotify),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _launchURL("${songData["song_link"]}");
+                  },
                   icon: const FaIcon(FontAwesomeIcons.deezer),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _launchURL("${songData["apple_music"]}");
+                  },
                   icon: const FaIcon(FontAwesomeIcons.apple),
                 ),
               ],
@@ -100,7 +110,7 @@ class SelectedSong extends StatelessWidget {
         title: const Text('Eliminar de favoritos'),
         content: const Text(
             'El elemento será eliminado de tus favoritos ¿Quieres continuar?'),
-        actions: <Widget>[
+        actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context, 'Cancelar');
@@ -111,11 +121,25 @@ class SelectedSong extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context, 'Eliminar');
               print('DELETE $songData to favorites');
+              context.read<FavoriteProvider>().deleteSong(songData);
+              isFavorite = true;
             },
             child: const Text('Eliminar'),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    print(url);
+    print(uri);
+    // if (await canLaunchUrl(uri)) {
+    //   await launchUrl(uri);
+    // } else {
+    //   print('Could not launch $uri');
+    // }
+    if (!await launch(url)) throw 'No se pudo acceder a: $url';
   }
 }
