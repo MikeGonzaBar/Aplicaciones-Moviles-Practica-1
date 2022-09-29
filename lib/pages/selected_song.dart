@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, must_be_immutable, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:practica1/providers/favorite_song_provider.dart';
@@ -22,7 +24,6 @@ class SelectedSong extends StatelessWidget {
               if (isFavorite) {
                 addAlert(context);
               } else {
-                print('ADD $songData to favorites');
                 context.read<FavoriteProvider>().addNewSong(songData);
                 Navigator.of(context).pop();
               }
@@ -134,9 +135,6 @@ class SelectedSong extends StatelessWidget {
   }
 
   Future<void> _launchURL(String url) async {
-    Uri uri = Uri.parse(url);
-    print(url);
-    print(uri);
     // if (await canLaunchUrl(uri)) {
     //   await launchUrl(uri);
     // } else {

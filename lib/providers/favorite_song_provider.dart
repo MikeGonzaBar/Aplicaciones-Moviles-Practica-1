@@ -1,9 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class FavoriteProvider with ChangeNotifier {
@@ -148,13 +149,43 @@ class FavoriteProvider with ChangeNotifier {
     String songString = _fileConvert(songFile);
     dynamic response = await _sendToAPI(songString);
     dynamic songObject = response["result"];
+    // print(songObject);
+    // print(songObject["spotify"]);
+    // print(songObject["spotify"]["album"]);
+    // print(songObject["spotify"]["album"]["images"]);
+    // print(songObject["spotify"]["album"]["images"][0]);
+    // print(songObject["spotify"]["album"]["images"][0]["url"]);
     if (songObject != null) {
-      if (songObject["spotify"]["album"]["images"][0]["url"] == null) {
-        songObject["spotify"]["album"]["images"][0]["url"] =
-            'https://bazarama.com/assets/imgs/Image-not-available.png';
-        addNewSong(songObject);
-        notifyListeners();
+      if (songObject["title"] == null) {
+        songObject["spotify"] = "N/A";
       }
+      if (songObject["album"] == null) {
+        songObject["album"] = "N/A";
+      }
+      if (songObject["artist"] == null) {
+        songObject["artist"] = "N/A";
+      }
+      if (songObject["release_date"] == null) {
+        songObject["artist"] = "N/A";
+      }
+      if (songObject["spotify"] == null) {
+        songObject["spotify"] = {
+          "external_urls": {"spotify": "${songObject["song_link"]}"},
+          "album": {
+            "images": [
+              {
+                "url":
+                    "https://bazarama.com/assets/imgs/Image-not-available.png",
+              },
+            ],
+          },
+        };
+      }
+      if (songObject["deezer"] == null) {
+        songObject["deezer"] = {"link": "${songObject["song_link"]}"};
+      }
+      addNewSong(songObject);
+      notifyListeners();
     }
     return songObject;
   }
@@ -191,7 +222,6 @@ class FavoriteProvider with ChangeNotifier {
       print(response.body);
       return jsonDecode(response.body);
     } else {
-      print("Valio verga");
       throw Exception('Failed to load json');
     }
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, library_private_types_in_public_api
+
 import 'dart:async';
 import 'dart:io';
 
@@ -51,16 +53,11 @@ class _HomePageState extends State<HomePage> {
                 shape: const CircleBorder(),
                 onPressed: () {
                   _animate = !_animate;
-
-                  msg = (msg == "Escuchando...")
-                      ? "Toque para escuchar"
-                      : "Escuchando...";
+                  msg = "Escuchando...";
                   recordingTrack();
                   setState(() {});
-                  Timer(Duration(seconds: 4), () async {
-                    msg = (msg == "Escuchando...")
-                        ? "Toque para escuchar"
-                        : "Escuchando...";
+                  Timer(const Duration(seconds: 4), () async {
+                    msg = "Toque para escuchar";
                     _animate = !_animate;
                     setState(() {});
                   });
@@ -112,14 +109,13 @@ class _HomePageState extends State<HomePage> {
     bool isRecording = await record.isRecording();
     if (isRecording) {
       Timer(
-        Duration(seconds: 4),
+        const Duration(seconds: 4),
         () async {
-          print("Yeah, this line is printed after 4 seconds");
           String? songPath = await record.stop();
           print(songPath);
           dynamic detectedSong =
               await context.read<FavoriteProvider>().searchSong(songPath!);
-          print("Spotify: ${detectedSong}");
+          print("Spotify: $detectedSong");
           if (detectedSong == null) {
             final snackBar = SnackBar(
               content: const Text(
