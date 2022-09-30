@@ -52,16 +52,8 @@ class SelectedSong extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               textAlign: TextAlign.center,
             ),
-            Text(
-              "${songData["artist"]}",
-              style: const TextStyle(color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              "${songData["release_date"]}",
-              style: const TextStyle(color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
+            subText("${songData["artist"]}"),
+            subText("${songData["release_date"]}"),
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Divider(
@@ -79,30 +71,35 @@ class SelectedSong extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                IconButton(
-                  onPressed: () {
-                    _launchURL(
-                        "${songData["spotify"]["external_urls"]["spotify"]}");
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.spotify),
-                ),
-                IconButton(
-                  onPressed: () {
-                    _launchURL("${songData["deezer"]["link"]}");
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.deezer),
-                ),
-                IconButton(
-                  onPressed: () {
-                    _launchURL("${songData["apple_music"]["url"]}");
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.apple),
-                ),
+                platformButton(
+                    "${songData["spotify"]["external_urls"]["spotify"]}",
+                    FaIcon(FontAwesomeIcons.spotify)),
+                platformButton("${songData["deezer"]["link"]}",
+                    FaIcon(FontAwesomeIcons.deezer)),
+                platformButton("${songData["apple_music"]["url"]}",
+                    FaIcon(FontAwesomeIcons.apple)),
               ],
             )
           ],
         ),
       ),
+    );
+  }
+
+  IconButton platformButton(String url, FaIcon icon) {
+    return IconButton(
+      onPressed: () {
+        _launchURL(url);
+      },
+      icon: icon,
+    );
+  }
+
+  Text subText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(color: Colors.grey),
+      textAlign: TextAlign.center,
     );
   }
 
@@ -135,11 +132,6 @@ class SelectedSong extends StatelessWidget {
   }
 
   Future<void> _launchURL(String url) async {
-    // if (await canLaunchUrl(uri)) {
-    //   await launchUrl(uri);
-    // } else {
-    //   print('Could not launch $uri');
-    // }
     if (!await launch(url)) throw 'No se pudo acceder a: $url';
   }
 }

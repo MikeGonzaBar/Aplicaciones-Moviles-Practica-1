@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import '../credentials/credentials.dart' as credentials;
 
 class FavoriteProvider with ChangeNotifier {
   final List<dynamic> _favsList = [
@@ -17,6 +18,7 @@ class FavoriteProvider with ChangeNotifier {
       "label": "Universal Music",
       "timecode": "02:32",
       "song_link": "https://lis.tn/Warriors",
+      "deezer": {"link": "https://lis.tn/Warriors"},
       "apple_music": {
         "previews": [
           {
@@ -149,12 +151,6 @@ class FavoriteProvider with ChangeNotifier {
     String songString = _fileConvert(songFile);
     dynamic response = await _sendToAPI(songString);
     dynamic songObject = response["result"];
-    // print(songObject);
-    // print(songObject["spotify"]);
-    // print(songObject["spotify"]["album"]);
-    // print(songObject["spotify"]["album"]["images"]);
-    // print(songObject["spotify"]["album"]["images"][0]);
-    // print(songObject["spotify"]["album"]["images"][0]["url"]);
     if (songObject != null) {
       if (songObject["title"] == null) {
         songObject["spotify"] = "N/A";
@@ -200,25 +196,13 @@ class FavoriteProvider with ChangeNotifier {
     print("Sending file: $file");
     var url = Uri.parse('https://api.audd.io/');
     var response = await http.post(url, body: {
-      'api_token': 'f9576b7cedfe753b5fe7e042b1254a99',
+      'api_token': credentials.API_KEY,
       // 'api_token': dotenv.env['API_KEY'],
       'return': 'apple_music,spotify,deezer',
       'audio': file,
       'method': 'recognize',
-    }
-        //Uri.parse('https://api.audd.io/'),
-        //headers: {'Content-Type': 'multipart/form-data'},
-        // body: jsonEncode(
-        //<String, dynamic>{
-        // 'api_token': '5288e8cdda3b260a53338276baeb8d05',
-        //'return': 'apple_music,spotify',
-        //  'audio': file,
-        //   'method': 'recognize',
-        //},
-        //),
-        );
+    });
     if (response.statusCode == 200) {
-      //print("Success");
       print(response.body);
       return jsonDecode(response.body);
     } else {

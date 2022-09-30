@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => SelectedSong(
-                isFavorite: false,
+                isFavorite: true,
                 songData: detectedSong,
               ),
             ),
